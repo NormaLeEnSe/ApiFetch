@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(api)
             .then(response => response.json())
             .then(data => {
-                const expirationTime = Date.now() + 60000; 
+                const expirationTime = Date.now() + 60000;
                 const currentTime = new Date().toISOString();
                 const dataWithTimestamp = {
                     timestamp: currentTime,
@@ -25,6 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadingText.style.display = 'none'; // Ocultar el texto de carga
             })
             .catch(error => console.log(error));
+    };
+
+    const checkExpirationAndFetchData = () => {
+        const storedData = localStorage.getItem('userData');
+        const storedExpirationTime = localStorage.getItem('expirationTime');
+        const currentTime = Date.now();
+
+        if (storedData && storedExpirationTime && currentTime < parseInt(storedExpirationTime)) {
+            mostrarData(JSON.parse(storedData));
+        }
     };
 
     const mostrarData = (data) => {
@@ -44,4 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const button = document.getElementById('getDataButton');
     button.addEventListener('click', fetchData);
+
+    checkExpirationAndFetchData(); // Cargar datos al cargar la página
 });
+
+
+
+
